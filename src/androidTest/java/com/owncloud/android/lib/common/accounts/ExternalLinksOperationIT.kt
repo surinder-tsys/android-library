@@ -1,8 +1,8 @@
-/*   Nextcloud Android Library is available under MIT license
+/* Nextcloud Android Library is available under MIT license
  *
  *   @author Tobias Kaminsky
- *   Copyright (C) 2017 Tobias Kaminsky
- *   Copyright (C) 2017 Nextcloud GmbH
+ *   Copyright (C) 2022 Tobias Kaminsky
+ *   Copyright (C) 2022 Nextcloud GmbH
  *
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
  *   of this software and associated documentation files (the "Software"), to deal
@@ -24,26 +24,27 @@
  *   THE SOFTWARE.
  *
  */
+package com.owncloud.android.lib.common.accounts
 
-package com.owncloud.android.lib.common;
+import com.owncloud.android.AbstractIT
+import com.owncloud.android.lib.common.ExternalLink
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertTrue
+import org.junit.Test
 
-import org.parceler.Parcel;
+class ExternalLinksOperationIT : AbstractIT() {
+    @Test
+    fun retrieveExternalLinks() {
+        val result = ExternalLinksOperation().execute(client)
+        assertTrue(result.isSuccess)
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+        val data = result.data as ArrayList<ExternalLink>
+        assertEquals(2, data.size)
 
-/**
- * Quota data model
- */
-@Parcel
-@NoArgsConstructor
-@AllArgsConstructor
-public class ExternalLink {
-    public Integer id;
-    public String iconUrl;
-    public String language;
-    public ExternalLinkType type;
-    public String name;
-    public String url;
-    public boolean redirect;
+        assertEquals("Nextcloud", data[0].name)
+        assertEquals("https://www.nextcloud.com", data[0].url)
+
+        assertEquals("Forum", data[1].name)
+        assertEquals("https://help.nextcloud.com", data[1].url)
+    }
 }

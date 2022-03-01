@@ -1,8 +1,8 @@
 /* Nextcloud Android Library is available under MIT license
  *
  *   @author Tobias Kaminsky
- *   Copyright (C) 2019 Tobias Kaminsky
- *   Copyright (C) 2019 Nextcloud GmbH
+ *   Copyright (C) 2022 Tobias Kaminsky
+ *   Copyright (C) 2022 Nextcloud GmbH
  *
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
  *   of this software and associated documentation files (the "Software"), to deal
@@ -24,32 +24,18 @@
  *   THE SOFTWARE.
  *
  */
-package com.owncloud.android.lib.common.operations;
 
-import static org.junit.Assert.assertTrue;
+package com.owncloud.android.lib.common
 
-import com.owncloud.android.AbstractIT;
-import com.owncloud.android.lib.resources.users.GetUserInfoRemoteOperation;
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-import org.junit.Test;
-
-
-/**
- * Class to test Get User Quota
- *
- * @author Bartosz Przybylski
- */
-public class GetUserQuotaIT extends AbstractIT {
-
-    @Test
-    public void testGetUserQuota() {
-        RemoteOperationResult<UserInfo> result = new GetUserInfoRemoteOperation().execute(nextcloudClient);
-        assertTrue(result.isSuccess());
-
-        UserInfo userInfo = result.getResultData();
-        Quota quota = userInfo.getQuota();
-        assertTrue(quota.getFree() >= 0);
-        assertTrue(quota.getUsed() >= 0);
-        assertTrue(quota.getTotal() > 0);
-    }
-}
+@Parcelize
+data class Creator(
+    val id: String,
+    val editor: String,
+    val name: String,
+    val extension: String,
+    val mimetype: String,
+    val templates: Boolean
+) : Parcelable

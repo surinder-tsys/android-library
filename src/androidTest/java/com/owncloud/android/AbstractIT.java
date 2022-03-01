@@ -161,6 +161,12 @@ public abstract class AbstractIT {
                 NetworkUtils.addCertToKnownServersStore(certificate, context);
                 Thread.sleep(1000);
 
+                Assert.assertEquals(certificate,
+                        NetworkUtils.getKnownServersStore(context)
+                                .getCertificate(Integer.toString(certificate.hashCode()))
+                );
+
+
                 // retry
                 getStatus = new GetStatusRemoteOperation(context);
                 result = getStatus.execute(client);

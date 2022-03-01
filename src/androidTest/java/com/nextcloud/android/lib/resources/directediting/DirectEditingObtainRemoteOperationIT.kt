@@ -1,8 +1,8 @@
 /* Nextcloud Android Library is available under MIT license
  *
  *   @author Tobias Kaminsky
- *   Copyright (C) 2019 Tobias Kaminsky
- *   Copyright (C) 2019 Nextcloud GmbH
+ *   Copyright (C) 2022 Tobias Kaminsky
+ *   Copyright (C) 2022 Nextcloud GmbH
  *
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
  *   of this software and associated documentation files (the "Software"), to deal
@@ -24,32 +24,33 @@
  *   THE SOFTWARE.
  *
  */
+package com.nextcloud.android.lib.resources.directediting
 
-package com.owncloud.android.lib.common;
+import com.owncloud.android.AbstractIT
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertFalse
+import junit.framework.Assert.assertNotNull
+import junit.framework.Assert.assertTrue
+import org.junit.Test
 
-import org.parceler.Parcel;
+class DirectEditingObtainRemoteOperationIT : AbstractIT() {
+    @Test
+    fun testGetAll() {
+        val result = DirectEditingObtainRemoteOperation().execute(client)
+        assertTrue(result.isSuccess)
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+        val (editors, creators) = result.resultData
+        assertTrue(editors.containsKey("text"))
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+        val textEditor = editors["text"]
+        assertNotNull(textEditor)
+        assertEquals("Nextcloud Text", textEditor!!.name)
+        assertTrue(textEditor.mimetypes.contains("text/markdown"))
+        assertTrue(textEditor.mimetypes.contains("text/plain"))
+        assertEquals(0, textEditor.optionalMimetypes.size.toLong())
 
-/**
- * List of templates data model
- */
-@Parcel
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class TemplateList {
-    public Map<String, Template> templates = new HashMap<>();
-    
-    public ArrayList<Template> getTemplateList() {
-        return new ArrayList<>(templates.values());
+        val creator = creators["textdocument"]
+        assertNotNull(creator)
+        assertFalse(creator!!.templates)
     }
 }

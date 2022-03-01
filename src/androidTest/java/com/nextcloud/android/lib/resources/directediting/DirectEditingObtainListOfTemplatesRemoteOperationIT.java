@@ -47,7 +47,7 @@ public class DirectEditingObtainListOfTemplatesRemoteOperationIT extends Abstrac
 
         TemplateList templateList = (TemplateList) result.getResultData();
 
-        assertEquals("Empty file", templateList.templates.get("empty").title);
-        assertEquals("md", templateList.templates.get("empty").extension);
+        assertEquals("Empty file", templateList.getTemplates().get("empty").getTitle());
+        assertEquals("md", templateList.getTemplates().get("empty").getExtension());
     }
 }

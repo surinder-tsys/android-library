@@ -24,32 +24,20 @@
  *   THE SOFTWARE.
  *
  */
-package com.owncloud.android.lib.common.operations;
 
-import static org.junit.Assert.assertTrue;
+package com.owncloud.android.lib.common
 
-import com.owncloud.android.AbstractIT;
-import com.owncloud.android.lib.resources.users.GetUserInfoRemoteOperation;
-
-import org.junit.Test;
-
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 /**
- * Class to test Get User Quota
- *
- * @author Bartosz Przybylski
+ * Editor for direct editing data model
  */
-public class GetUserQuotaIT extends AbstractIT {
-
-    @Test
-    public void testGetUserQuota() {
-        RemoteOperationResult<UserInfo> result = new GetUserInfoRemoteOperation().execute(nextcloudClient);
-        assertTrue(result.isSuccess());
-
-        UserInfo userInfo = result.getResultData();
-        Quota quota = userInfo.getQuota();
-        assertTrue(quota.getFree() >= 0);
-        assertTrue(quota.getUsed() >= 0);
-        assertTrue(quota.getTotal() > 0);
-    }
-}
+@Parcelize
+data class Editor(
+    val id: String,
+    val name: String,
+    val mimetypes: ArrayList<String>,
+    val optionalMimetypes: ArrayList<String>,
+    val secure: Boolean,
+) : Parcelable

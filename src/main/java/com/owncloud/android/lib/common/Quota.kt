@@ -25,46 +25,24 @@
  *
  */
 
-package com.owncloud.android.lib.common;
+package com.owncloud.android.lib.common
 
-import com.google.gson.annotations.SerializedName;
-
-import org.parceler.Parcel;
-
-import java.util.ArrayList;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import lombok.ToString
 
 /**
- * User information data model
+ * Quota data model
  */
-@Parcel
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserInfo {
-    @SerializedName("id")
-    public String id;
-    @SerializedName("enabled")
-    public Boolean enabled;
-    @SerializedName(value = "display-name", alternate = {"displayname"})
-    public String displayName;
-    @SerializedName("email")
-    public String email;
-    @SerializedName("phone")
-    public String phone;
-    @SerializedName("address")
-    public String address;
-    @SerializedName(value = "website", alternate = {"webpage"})
-    public String website;
-    @SerializedName("twitter")
-    public String twitter;
-    @SerializedName("quota")
-    public Quota quota;
-    @SerializedName("groups")
-    public ArrayList<String> groups;
+
+@Parcelize
+@ToString
+data class Quota(
+    val free: Long = 0,
+    val used: Long = 0,
+    val total: Long = 0,
+    val relative: Double = 0.0,
+    val quota: Long = 0,
+) : Parcelable {
+    constructor(quota: Long) : this(0, quota = quota)
 }

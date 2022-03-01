@@ -1,7 +1,7 @@
 /*   Nextcloud Android Library is available under MIT license
  *
- *   @author Mario Danic
- *   Copyright (C) 2017 Mario Danic
+ *   @author Tobias Kaminsky
+ *   Copyright (C) 2017 Tobias Kaminsky
  *   Copyright (C) 2017 Nextcloud GmbH
  *
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,37 +25,21 @@
  *
  */
 
-package com.owncloud.android.lib.common;
+package com.owncloud.android.lib.common
 
-import com.google.gson.annotations.SerializedName;
-
-import org.parceler.Parcel;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 /**
  * Quota data model
  */
-
-@Parcel
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-public class Quota {
-    @SerializedName("free")
-    public long free;
-    @SerializedName("used")
-    public long used;
-    @SerializedName("total")
-    public long total;
-    @SerializedName("relative")
-    public double relative;
-    @SerializedName("quota")
-    public long quota;
-}
+@Parcelize
+data class ExternalLink(
+    val id: Int,
+    val iconUrl: String,
+    val language: String,
+    val type: ExternalLinkType,
+    val name: String,
+    val url: String,
+    val redirect: Boolean,
+) : Parcelable
