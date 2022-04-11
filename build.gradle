@@ -1,0 +1,22 @@
+subprojects {
+    buildscript {
+        repositories {
+            google()
+            maven {
+                url 'https://plugins.gradle.org/m2/'
+            }
+            mavenCentral()
+        }
+    }
+    repositories {
+        google()
+        maven { url "https://jitpack.io" }
+        maven { url "https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven" }
+
+        mavenCentral()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
