@@ -29,6 +29,8 @@ package com.owncloud.android.lib.common.operations;
 import static org.junit.Assert.assertTrue;
 
 import com.owncloud.android.AbstractIT;
+import com.owncloud.android.lib.common.Quota;
+import com.owncloud.android.lib.common.UserInfo;
 import com.owncloud.android.lib.resources.users.GetUserInfoRemoteOperation;
 
 import org.junit.Test;

@@ -26,8 +26,6 @@
 
 package com.owncloud.android.lib.resources.shares;
 
-import android.text.TextUtils;
-
 import com.owncloud.android.lib.common.OwnCloudClient;
 import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;

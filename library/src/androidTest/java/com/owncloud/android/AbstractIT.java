@@ -166,7 +166,6 @@ public abstract class AbstractIT {
                                 .getCertificate(Integer.toString(certificate.hashCode()))
                 );
 
-
                 // retry
                 getStatus = new GetStatusRemoteOperation(context);
                 result = getStatus.execute(client);

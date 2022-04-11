@@ -169,4 +169,12 @@ class NextcloudClient(
         }
         return result
     }
+
+    fun getUserIdEncoded(): String {
+        return UserIdEncoder.encode(userId)
+    }
+
+    fun getUserIdPlain(): String {
+        return userId
+    }
 }
