@@ -25,14 +25,19 @@
  *  THE SOFTWARE.
  */
 
-package com.nextcloud.common
+package com.nextcloud.operations
 
-import okhttp3.Dns
-import java.net.InetAddress
+import com.nextcloud.common.OkHttpMethodBase
+import okhttp3.Request
 
-object IPV6PreferringDNS : Dns {
-
-    override fun lookup(hostname: String): List<InetAddress> {
-        return DNSCache.lookup(hostname)
+/**
+ * HTTP UNLOCK method that uses OkHttp with new NextcloudClient
+ */
+class UnlockMethod(
+    uri: String,
+    useOcsApiRequestHeader: Boolean
+) : OkHttpMethodBase(uri, useOcsApiRequestHeader) {
+    override fun applyType(temp: Request.Builder) {
+        temp.method("UNLOCK", null)
     }
 }

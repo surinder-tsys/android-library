@@ -40,7 +40,6 @@ import com.owncloud.android.lib.common.network.RedirectionPath
 import com.owncloud.android.lib.common.operations.RemoteOperation
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.common.utils.Log_OC
-import okhttp3.ConnectionPool
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -50,13 +49,25 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLSession
 import javax.net.ssl.TrustManager
 
-class NextcloudClient(
-    var baseUri: Uri,
-    var userId: String,
+class NextcloudClient private constructor(
+    val delegate: NextcloudUriDelegate,
     var credentials: String,
-    val client: OkHttpClient
-) {
+    val client: OkHttpClient,
+) : NextcloudUriProvider by delegate {
     var followRedirects = true
+
+    constructor(
+        baseUri: Uri,
+        userId: String,
+        credentials: String,
+        client: OkHttpClient,
+    ) : this(NextcloudUriDelegate(baseUri, userId), credentials, client)
+
+    var userId: String
+        get() = delegate.userId!!
+        set(value) {
+            delegate.userId = value
+        }
 
     companion object {
         @JvmStatic
@@ -70,17 +81,14 @@ class NextcloudClient(
             sslContext.init(null, arrayOf<TrustManager>(trustManager), null)
             val sslSocketFactory = sslContext.socketFactory
 
-            val connectionPool = ConnectionPool()
             return OkHttpClient.Builder()
-                .connectionPool(connectionPool)
                 .cookieJar(CookieJar.NO_COOKIES)
                 .connectTimeout(DEFAULT_CONNECTION_TIMEOUT_LONG, TimeUnit.MILLISECONDS)
                 .readTimeout(DEFAULT_DATA_TIMEOUT_LONG, TimeUnit.MILLISECONDS)
                 .callTimeout(DEFAULT_CONNECTION_TIMEOUT_LONG + DEFAULT_DATA_TIMEOUT_LONG, TimeUnit.MILLISECONDS)
                 .sslSocketFactory(sslSocketFactory, trustManager)
                 .hostnameVerifier { _: String?, _: SSLSession? -> true }
-                .addNetworkInterceptor(IPv4FallbackInterceptor(connectionPool))
-                .dns(IPV6PreferringDNS)
+                .fastFallback(true)
                 .build()
         }
     }
@@ -92,6 +100,7 @@ class NextcloudClient(
         context: Context
     ) : this(baseUri, userId, credentials, createDefaultClient(context))
 
+    @Suppress("TooGenericExceptionCaught")
     fun <T> execute(remoteOperation: RemoteOperation<T>): RemoteOperationResult<T> {
         return try {
             remoteOperation.run(this)
@@ -120,20 +129,16 @@ class NextcloudClient(
         var status = method.getStatusCode()
         val result = RedirectionPath(status, OwnCloudClient.MAX_REDIRECTIONS_COUNT)
 
-        while (
-            redirectionsCount < OwnCloudClient.MAX_REDIRECTIONS_COUNT &&
-            (
-                status == HttpStatus.SC_MOVED_PERMANENTLY ||
-                    status == HttpStatus.SC_MOVED_TEMPORARILY ||
-                    status == HttpStatus.SC_TEMPORARY_REDIRECT
-                )
-        ) {
+        val statusIsRedirection = status == HttpStatus.SC_MOVED_PERMANENTLY ||
+            status == HttpStatus.SC_MOVED_TEMPORARILY ||
+            status == HttpStatus.SC_TEMPORARY_REDIRECT
+        while (redirectionsCount < OwnCloudClient.MAX_REDIRECTIONS_COUNT && statusIsRedirection) {
             var location = method.getResponseHeader("Location")
             if (location == null) {
                 location = method.getResponseHeader("location")
             }
             if (location != null) {
-                Log_OC.d(TAG, "Location to redirect: " + location)
+                Log_OC.d(TAG, "Location to redirect: $location")
                 result.addLocation(location)
                 // Release the connection to avoid reach the max number of connections per host
                 // due to it will be set a different url
@@ -171,10 +176,10 @@ class NextcloudClient(
     }
 
     fun getUserIdEncoded(): String {
-        return UserIdEncoder.encode(userId)
+        return delegate.userIdEncoded!!
     }
 
     fun getUserIdPlain(): String {
-        return userId
+        return delegate.userId!!
     }
 }
