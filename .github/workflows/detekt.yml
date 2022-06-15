@@ -19,7 +19,7 @@ jobs:
               java-version: 11
           - name: Run detekt
             run: ./gradlew detekt
-          - uses: actions/upload-artifact@v2
+          - uses: actions/upload-artifact@v3
             if: ${{ always() }}
             with:
               name: detekt-report
