@@ -39,28 +39,24 @@ import com.owncloud.android.lib.common.accounts.AccountUtils.AccountNotFoundExce
 
 import java.io.IOException;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-
 /**
  * OwnCloud Account
- * 
+ *
  * @author David A. Velasco
  */
-@EqualsAndHashCode
 public class OwnCloudAccount implements Parcelable {
 
-    @Getter private Uri baseUri;
-    @Getter private OwnCloudCredentials credentials;
+    private Uri baseUri;
+    private OwnCloudCredentials credentials;
 
     private String displayName;
 
-    @Getter private String name;
-    @Getter private Account savedAccount;
+    private String name;
+    private Account savedAccount;
 
     /**
      * Constructor for already saved OC accounts.
-     *
+     * <p>
      * Do not use for anonymous credentials.
      */
     public OwnCloudAccount(Account savedAccount, Context context) throws AccountNotFoundException {
@@ -78,7 +74,7 @@ public class OwnCloudAccount implements Parcelable {
 
         AccountManager ama = AccountManager.get(context.getApplicationContext());
         String baseUrl = ama.getUserData(this.savedAccount, AccountUtils.Constants.KEY_OC_BASE_URL);
-        if (baseUrl == null ) {
+        if (baseUrl == null) {
             throw new AccountNotFoundException(this.savedAccount, "Account not found", null);
         }
         baseUri = Uri.parse(AccountUtils.getBaseUrlForAccount(context, this.savedAccount));
@@ -89,8 +85,8 @@ public class OwnCloudAccount implements Parcelable {
     /**
      * Constructor for non yet saved OC accounts.
      *
-     * @param baseUri           URI to the OC server to get access to.
-     * @param credentials       Credentials to authenticate in the server. NULL is valid for anonymous credentials.
+     * @param baseUri     URI to the OC server to get access to.
+     * @param credentials Credentials to authenticate in the server. NULL is valid for anonymous credentials.
      */
     public OwnCloudAccount(Uri baseUri, OwnCloudCredentials credentials) {
         if (baseUri == null) {
@@ -117,16 +113,16 @@ public class OwnCloudAccount implements Parcelable {
      */
     public void loadCredentials(Context context)
             throws AuthenticatorException,
-                IOException, OperationCanceledException {
+            IOException, OperationCanceledException {
 
         if (context == null) {
             throw new IllegalArgumentException("Parameter 'context' cannot be null");
         }
 
-		if (savedAccount != null) {
-			credentials = AccountUtils.getCredentialsForAccount(context, savedAccount);
-		}
-	}
+        if (savedAccount != null) {
+            credentials = AccountUtils.getCredentialsForAccount(context, savedAccount);
+        }
+    }
 
     public String getDisplayName() {
         if (displayName != null && displayName.length() > 0) {
@@ -177,4 +173,61 @@ public class OwnCloudAccount implements Parcelable {
             return new OwnCloudAccount[size];
         }
     };
+
+    public Uri getBaseUri() {
+        return this.baseUri;
+    }
+
+    public OwnCloudCredentials getCredentials() {
+        return this.credentials;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Account getSavedAccount() {
+        return this.savedAccount;
+    }
+
+    @SuppressWarnings("EqualsReplaceableByObjectsCall") // minApi < 19
+    public boolean equals(final Object o) {
+        if (o == this) return true;
+        if (!(o instanceof OwnCloudAccount)) return false;
+        final OwnCloudAccount other = (OwnCloudAccount) o;
+        final Object this$baseUri = this.getBaseUri();
+        final Object other$baseUri = other.getBaseUri();
+        if (this$baseUri == null ? other$baseUri != null : !this$baseUri.equals(other$baseUri))
+            return false;
+        final Object this$credentials = this.getCredentials();
+        final Object other$credentials = other.getCredentials();
+        if (this$credentials == null ? other$credentials != null : !this$credentials.equals(other$credentials))
+            return false;
+        final Object this$displayName = this.getDisplayName();
+        final Object other$displayName = other.getDisplayName();
+        if (this$displayName == null ? other$displayName != null : !this$displayName.equals(other$displayName))
+            return false;
+        final Object this$name = this.getName();
+        final Object other$name = other.getName();
+        if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+        final Object this$savedAccount = this.getSavedAccount();
+        final Object other$savedAccount = other.getSavedAccount();
+        return this$savedAccount == null ? other$savedAccount == null : this$savedAccount.equals(other$savedAccount);
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $baseUri = this.getBaseUri();
+        result = result * PRIME + ($baseUri == null ? 43 : $baseUri.hashCode());
+        final Object $credentials = this.getCredentials();
+        result = result * PRIME + ($credentials == null ? 43 : $credentials.hashCode());
+        final Object $displayName = this.getDisplayName();
+        result = result * PRIME + ($displayName == null ? 43 : $displayName.hashCode());
+        final Object $name = this.getName();
+        result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+        final Object $savedAccount = this.getSavedAccount();
+        result = result * PRIME + ($savedAccount == null ? 43 : $savedAccount.hashCode());
+        return result;
+    }
 }

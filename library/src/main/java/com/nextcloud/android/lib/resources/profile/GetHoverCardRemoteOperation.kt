@@ -61,7 +61,8 @@ class GetHoverCardRemoteOperation(private val userId: String) : OCSRemoteOperati
         } catch (e: Exception) {
             result = RemoteOperationResult(e)
             Log_OC.e(
-                TAG, "Get hoverCard for user " + userId + " failed: " + result.logMessage,
+                TAG,
+                "Get hoverCard for user " + userId + " failed: " + result.logMessage,
                 result.exception
             )
         } finally {
@@ -73,6 +74,5 @@ class GetHoverCardRemoteOperation(private val userId: String) : OCSRemoteOperati
     companion object {
         private val TAG = GetHoverCardRemoteOperation::class.java.simpleName
         private const val DIRECT_ENDPOINT = "/ocs/v2.php/hovercard/v1/"
-        private const val JSON_FORMAT = "?format=json"
     }
 }

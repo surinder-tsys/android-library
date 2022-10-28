@@ -52,7 +52,7 @@ import javax.net.ssl.TrustManager
 class NextcloudClient private constructor(
     val delegate: NextcloudUriDelegate,
     var credentials: String,
-    val client: OkHttpClient,
+    val client: OkHttpClient
 ) : NextcloudUriProvider by delegate {
     var followRedirects = true
 
@@ -60,7 +60,7 @@ class NextcloudClient private constructor(
         baseUri: Uri,
         userId: String,
         credentials: String,
-        client: OkHttpClient,
+        client: OkHttpClient
     ) : this(NextcloudUriDelegate(baseUri, userId), credentials, client)
 
     var userId: String
@@ -109,7 +109,7 @@ class NextcloudClient private constructor(
         }
     }
 
-    @Throws(Exception::class)
+    @Throws(IOException::class)
     fun execute(method: OkHttpMethodBase): Int {
         return method.execute(this)
     }

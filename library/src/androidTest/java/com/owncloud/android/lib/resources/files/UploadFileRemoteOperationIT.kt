@@ -97,21 +97,22 @@ class UploadFileRemoteOperationIT : AbstractIT() {
     private fun getCreationTimestamp(file: File): Long? {
         return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             return null
-        } else try {
-            Files.readAttributes(file.toPath(), BasicFileAttributes::class.java)
-                .creationTime()
-                .to(TimeUnit.SECONDS)
-        } catch (e: IOException) {
-            Log_OC.e(
-                UploadFileRemoteOperation::class.java.simpleName,
-                "Failed to read creation timestamp for file: " + file.name
-            )
-            null
+        } else {
+            try {
+                Files.readAttributes(file.toPath(), BasicFileAttributes::class.java)
+                    .creationTime()
+                    .to(TimeUnit.SECONDS)
+            } catch (e: IOException) {
+                Log_OC.e(
+                    UploadFileRemoteOperation::class.java.simpleName,
+                    "Failed to read creation timestamp for file: " + file.name
+                )
+                null
+            }
         }
     }
 
     companion object {
         const val TIME_OFFSET = 10
-        const val MILLI_TO_SECOND = 1000
     }
 }

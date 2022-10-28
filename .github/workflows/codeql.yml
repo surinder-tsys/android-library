@@ -2,11 +2,14 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ "master", "stable-*" ]
+    branches: [ "master", "main", "stable-*" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
   schedule:
     - cron: '24 18 * * 3'
+
+permissions:
+  contents: read
 
 jobs:
   analyze:
@@ -28,14 +31,14 @@ jobs:
       with:
         languages: ${{ matrix.language }}
     - name: Set up JDK 
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         distribution: "temurin"
         java-version: 11
     - name: Assemble
       run: |
-        mkdir -p $HOME/.gradle
-        echo "org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError" > $HOME/.gradle/gradle.properties
+        mkdir -p "$HOME/.gradle"
+        echo "org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError" > "$HOME/.gradle/gradle.properties"
         ./gradlew assembleDebug
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
