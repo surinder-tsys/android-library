@@ -17,10 +17,6 @@ buildscript {
     }
 }
 
-plugins {
-    id "com.diffplug.spotless" version "6.11.0"
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
@@ -191,11 +187,4 @@ afterEvaluate {
 
 jacoco {
     toolVersion = "$jacoco_version"
-}
-
-spotless {
-    kotlin {
-        target "**/*.kt"
-        ktlint()
-    }
 }
