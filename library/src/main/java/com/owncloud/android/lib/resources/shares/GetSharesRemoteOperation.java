@@ -36,6 +36,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.List;
 
+import static com.owncloud.android.lib.resources.shares.ShareUtils.INCLUDE_TAGS;
+
 /**
  * Get the data from the server about ALL the known shares owned by the requester.
  */
@@ -63,6 +65,7 @@ public class GetSharesRemoteOperation extends RemoteOperation<List<OCShare>> {
         // Get the response
         try {
             get = new GetMethod(client.getBaseUri() + ShareUtils.SHARING_API_PATH);
+            get.setQueryString(INCLUDE_TAGS);
             get.addRequestHeader(OCS_API_HEADER, OCS_API_HEADER_VALUE);
 
             if (sharedWithMe) {

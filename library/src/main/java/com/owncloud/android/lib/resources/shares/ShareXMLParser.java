@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Parser for Share API Response
@@ -80,12 +81,17 @@ public class ShareXMLParser {
     private static final String NODE_UID_OWNER = "uid_owner";
 	private static final String NODE_LABEL = "label";
 	private static final String NODE_HAS_PREVIEW = "has_preview";
-	private static final String NODE_MIMETYPE =  "mimetype";
-	private static final String NODE_DISPLAYNAME_FILE_OWNER =  "displayname_file_owner";
+	private static final String NODE_MIMETYPE = "mimetype";
+	private static final String NODE_DISPLAYNAME_FILE_OWNER = "displayname_file_owner";
+	private static final String NODE_TAGS = "tags";
 
 	private static final String NODE_URL = "url";
 
+	private static final String TAG_FAVORITE = "_$!<Favorite>";
+
 	private static final String TYPE_FOLDER = "folder";
+
+	private static final String EMPTY_LINE = "\n";
 
 	private static final String TRUE = "1";
 	
@@ -417,6 +423,16 @@ public class ShareXMLParser {
 				case NODE_DISPLAYNAME_FILE_OWNER:
 					share.setOwnerDisplayName(readNode(parser, NODE_DISPLAYNAME_FILE_OWNER));
 					break;
+				case NODE_TAGS:
+					List<String> tags = readArrayNode(parser);
+					for (String tag : tags) {
+						if (tag.startsWith(TAG_FAVORITE)) {
+							share.setFavorite(true);
+							break;
+						}
+
+					}
+					break;
 
 				default:
 					skip(parser);
@@ -448,8 +464,8 @@ public class ShareXMLParser {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private String readNode (XmlPullParser parser, String node) throws XmlPullParserException,
-			IOException{
+	private String readNode(XmlPullParser parser, String node) throws XmlPullParserException,
+			IOException {
 		parser.require(XmlPullParser.START_TAG, ns, node);
 		String value = readText(parser);
 		//Log_OC.d(TAG, "node= " + node + ", value= " + value);
@@ -471,6 +487,33 @@ public class ShareXMLParser {
 			parser.nextTag();
 		}
 		return result;
+	}
+
+	private List<String> readArrayNode(XmlPullParser parser) throws IOException, XmlPullParserException {
+		ArrayList<String> list = new ArrayList<>();
+
+		parser.require(XmlPullParser.START_TAG, ns, ShareXMLParser.NODE_TAGS);
+
+		int event = parser.getEventType();
+		while (event != XmlPullParser.END_DOCUMENT) {
+			String tag = parser.getName();
+
+			if (event == XmlPullParser.TEXT) {
+				String text = parser.getText();
+
+				if (!EMPTY_LINE.equals(text)) {
+					list.add(text);
+				}
+			}
+
+			if (event == XmlPullParser.END_TAG && NODE_TAGS.equals(tag)) {
+				break;
+			}
+
+			event = parser.next();
+		}
+
+		return list;
 	}
 
 	/**

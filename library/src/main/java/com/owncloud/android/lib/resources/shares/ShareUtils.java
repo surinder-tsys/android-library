@@ -33,8 +33,10 @@ package com.owncloud.android.lib.resources.shares;
 
 public class ShareUtils {
 
-	// OCS Route
-	public static final String SHARING_API_PATH ="/ocs/v2.php/apps/files_sharing/api/v1/shares";
+    // OCS Route
+    public static final String SHARING_API_PATH = "/ocs/v2.php/apps/files_sharing/api/v1/shares";
+
+    public static final String INCLUDE_TAGS = "include_tags=true";
 
     // String to build the link with the token of a share:
     public static final String SHARING_LINK_PATH_AFTER_VERSION_8 = "/index.php/s/";

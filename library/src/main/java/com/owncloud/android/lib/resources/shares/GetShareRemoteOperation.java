@@ -35,6 +35,9 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.List;
 
+import static com.owncloud.android.lib.resources.shares.ShareUtils.INCLUDE_TAGS;
+import static com.owncloud.android.lib.resources.shares.ShareUtils.SHARING_API_PATH;
+
 /**
  * Get the data about a Share resource, known its remote ID.
  */
@@ -61,7 +64,8 @@ public class GetShareRemoteOperation extends RemoteOperation<List<OCShare>> {
 
         // Get the response
         try {
-            get = new GetMethod(client.getBaseUri() + ShareUtils.SHARING_API_PATH + "/" + remoteId);
+            get = new GetMethod(client.getBaseUri() + SHARING_API_PATH + "/" + remoteId);
+            get.setQueryString(INCLUDE_TAGS);
             get.addRequestHeader(OCS_API_HEADER, OCS_API_HEADER_VALUE);
 
             status = client.executeMethod(get);
