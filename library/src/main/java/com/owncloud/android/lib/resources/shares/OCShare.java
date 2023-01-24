@@ -155,6 +155,7 @@ public class OCShare implements Parcelable, Serializable {
         hasPreview = false;
         mimetype = "";
         ownerDisplayName = "";
+        isFavorite = false;
     }
 
     // custom Getters and Setters
@@ -241,6 +242,7 @@ public class OCShare implements Parcelable, Serializable {
         hasPreview = source.readInt() == 1;
         mimetype = source.readString();
         ownerDisplayName = source.readString();
+        isFavorite = source.readInt() == 1;
     }
 
 
@@ -273,6 +275,7 @@ public class OCShare implements Parcelable, Serializable {
         dest.writeInt(hasPreview ? 1 : 0);
         dest.writeString(mimetype);
         dest.writeString(ownerDisplayName);
+        dest.writeInt(isFavorite ? 1 : 0);
     }
 
 }
